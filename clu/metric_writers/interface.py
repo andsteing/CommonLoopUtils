@@ -63,6 +63,26 @@ class MetricWriter(abc.ABC):
     """
 
   @abc.abstractmethod
+  def write_audios(
+      self, step: int, audios: Mapping[str, Array], sample_rate: int):
+    """Write audios for the step.
+
+    Consecutive calls to this method can provide different sets of audios.
+    Repeated writes for the same image key at the same step are not allowed.
+
+    Warning: Not all MetricWriter implementation support writing images!
+
+    Args:
+      step: Step at which the images occurred.
+      audios: Mapping from audio key to audios. Audios should have the shape
+        [N, T, C], where T is the time length and C the number of channels
+        (1 or 3). N is the number of audios that will be written. Image
+        dimensions can differ between different audio keys but not between
+        different steps for the same audio key.
+      sample_rate: Sample rate for the audios.
+    """
+
+  @abc.abstractmethod
   def write_texts(self, step: int, texts: Mapping[str, str]):
     """Writes text snippets for the step.
 
